@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Resource;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,8 +13,7 @@ import java.util.regex.Pattern;
 
 public class CommonUtils {
 
-    @Resource
-    public static ObjectMapper objectMapper;
+    public static ObjectMapper objectMapper = new ObjectMapper();
 
     public static Logger logger = LoggerFactory.getLogger(CommonUtils.class);
     public static String HOST_DOMAIN = "http://127.0.0.1:8080/";
@@ -73,7 +71,7 @@ public class CommonUtils {
     public static Params transformToParams(String params){
         Params params1 = null;
         try{
-            params1 = ObjectMapper.readValue(params, Params.class);
+            params1 = objectMapper.readValue(params, Params.class);
         } catch (IOException e){
             logger.error("参数字符串转换出错！");
         }

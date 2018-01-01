@@ -1,9 +1,8 @@
 package com.Marissa.FAQ;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -11,7 +10,6 @@ import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
 @ComponentScan(basePackages={"com.Marissa"})
-@EnableAutoConfiguration
 public class Application  {
     //  文件上传配置
     @Bean
