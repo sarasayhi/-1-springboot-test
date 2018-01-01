@@ -29,6 +29,10 @@ function initDataList() {
         //         "ext":null
         //     },
         // ]
+        // if((typeof result=='string')&&result.constructor==String){
+        //     alert(result);
+        //     return;
+        // }
         var $dataList = $('#dataList'),
             html = '';
         var path = "upload/";

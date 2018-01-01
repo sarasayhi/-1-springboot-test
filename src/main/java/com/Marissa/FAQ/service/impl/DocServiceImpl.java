@@ -4,15 +4,11 @@ import com.Marissa.FAQ.repository.DocRepository;
 import com.Marissa.FAQ.repository.po.Doc;
 import com.Marissa.FAQ.service.DocService;
 import com.Marissa.FAQ.utils.CommonUtils;
-import com.google.common.collect.Lists;
-import com.mchange.v1.util.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.parser.Entity;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,8 +18,9 @@ public class DocServiceImpl implements DocService {
     private DocRepository docRepository;
 
     @Override
-    public void addDocMsg(Doc doc) {
-        docRepository.save(doc);
+    public void save(Doc doc) {
+        if(docRepository.checkExist(doc.getName()) == 0)
+            docRepository.save(doc);
     }
 
     @Override
@@ -33,10 +30,27 @@ public class DocServiceImpl implements DocService {
 
     @Override
     public List<Doc> getPageList(Pageable pageable) {
-//        return docRepository.getDocByPage(pageable);
-        Iterable<Doc> geted = docRepository.findAll();
-        List<Doc> list = Lists.newArrayList();
-        geted.forEach(single ->{list.add(single);});
-        return list;
+        int total = docRepository.getTotal();
+        int before = pageable.getPageSize()*(pageable.getPageNumber()-1);
+        if(total <= before){
+         return null;
+        } else{
+            return docRepository.getDocByPage(pageable);
+        }
+    }
+
+    @Override
+    public List<Doc> findByKey(String key) {
+        return docRepository.findByKey(key);
+    }
+
+    @Override
+    public Doc getByName(String name) {
+        return docRepository.getByName(name);
+    }
+
+    @Override
+    public int checkExist(String name) {
+        return docRepository.checkExist(name);
     }
 }

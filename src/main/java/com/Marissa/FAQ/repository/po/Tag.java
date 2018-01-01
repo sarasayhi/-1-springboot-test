@@ -9,14 +9,23 @@ public class Tag implements Serializable{
     @Id
     @GeneratedValue
     private int id;
-    @Column(name = "tag")
-    private String tag;
+    @Column(name = "name")
+    private String name;
     @Column(name = "docCnt")
     private int docCnt;
     @Column(name = "searchCnt")
     private int searchCnt;
+    @Column(name = "deleted")
+    private int deleted;
 
     public Tag() {}
+
+    public Tag(String name, int docCnt, int searchCnt, int deleted) {
+        this.name = name;
+        this.docCnt = docCnt;
+        this.searchCnt = searchCnt;
+        this.deleted = deleted;
+    }
 
     public int getId() {
         return id;
@@ -26,12 +35,12 @@ public class Tag implements Serializable{
         this.id = id;
     }
 
-    public String getTag() {
-        return tag;
+    public String getName() {
+        return name;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getDocCnt() {
@@ -48,5 +57,13 @@ public class Tag implements Serializable{
 
     public void setSearchCnt(int searchCnt) {
         this.searchCnt = searchCnt;
+    }
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
     }
 }

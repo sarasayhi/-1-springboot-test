@@ -1,29 +1,27 @@
 package com.Marissa.FAQ.utils;
 
-
-import com.Marissa.FAQ.repository.po.DownloadRecord;
-import com.alibaba.fastjson.JSONObject;
-import io.swagger.models.auth.In;
+import com.Marissa.FAQ.controller.vo.Params;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.annotation.Resource;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
 
+    @Resource
+    public static ObjectMapper objectMapper;
+
+    public static Logger logger = LoggerFactory.getLogger(CommonUtils.class);
     public static String HOST_DOMAIN = "http://127.0.0.1:8080/";
     public static String IMAGE_DIR = "test"+ File.separator;
     public static String[] IMAGE_FILE_EXT = new String[]{"pdf"};
+
     public static boolean isFileAllowed(String fileExt){
         for(String ext : IMAGE_FILE_EXT){
             if(ext.equals(fileExt)){
@@ -33,7 +31,7 @@ public class CommonUtils {
         return false;
     }
 
-    public static void download(String fileName,String filePath,
+   /* public static void download(String fileName,String filePath,
                                 HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         //声明本次下载状态的记录对象
@@ -70,32 +68,68 @@ public class CommonUtils {
         downloadRecord.setLength(downloadedLength);
         //存储记录
     }
+*/
 
+    public static Params transformToParams(String params){
+        Params params1 = null;
+        try{
+            params1 = ObjectMapper.readValue(params, Params.class);
+        } catch (IOException e){
+            logger.error("参数字符串转换出错！");
+        }
+        return params1;
+    }
+
+    public static String transformToString(Object obj){
+        String str = "";
+        try{
+            str = objectMapper.writeValueAsString(obj);
+        } catch (IOException e){
+            logger.error("对象转换字符串出错！");
+        }
+        return str;
+    }
     public static String getJSONString(int code){
-        JSONObject json = new JSONObject();
-        json.put("code",code);
-        return json.toJSONString();
+        String str = "";
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("code",code);
+
+        try{
+            str = objectMapper.writeValueAsString(map);
+        } catch (Exception e){
+            logger.error("Object转换字符串失败！");
+        }
+        return str;
     }
 
     public static String getJSONString(int code, String msg){
-        JSONObject json = new JSONObject();
-        json.put("code",code);
-        json.put("msg",msg);
-        return json.toJSONString();
-    }
+        String str = "";
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("code",code);
+        map.put("msg",msg);
 
-    public static String getJSONString(int code, Map<String, Object> map){
-        JSONObject json = new JSONObject();
-        json.put("code",code);
-        for(Map.Entry<String, Object> entry : map.entrySet()){
-            json.put(entry.getKey(), entry.getValue());
+        try{
+            str = objectMapper.writeValueAsString(map);
+        } catch (Exception e){
+            logger.error("Object转换字符串失败！");
         }
-        return json.toJSONString();
+        return str;
     }
-//    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    public final Logger logger = LoggerFactory.getLogger(CommonUtils.class);
 
-
+    public static String getJSONString(int code, Map<String, Object> params){
+        String str = "";
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("code",code);
+        for(Map.Entry<String, Object> entry : params.entrySet()){
+            map.put(entry.getKey(), entry.getValue());
+        }
+        try{
+            str = objectMapper.writeValueAsString(map);
+        } catch (Exception e){
+            logger.error("Object转换字符串失败！");
+        }
+        return str;
+    }
 
     public static String shaEncode(String str){
         MessageDigest messageDigest;
@@ -181,6 +215,14 @@ public class CommonUtils {
         return num != null && num.longValue() > 0;
     }
 
+    public static List<Integer> convertToList(int[] ids) {
+        List<Integer> list = new ArrayList<Integer>();
+        for(int id : ids){
+            list.add(id);
+        }
+        return list;
+    }
+
     public static List<Integer> convertToList(int id) {
         List<Integer> list = new ArrayList<Integer>();
         list.add(id);
@@ -191,4 +233,16 @@ public class CommonUtils {
         list.add(id);
         return list;
     }
+    public static List<String> convertToList(String name) {
+        List<String> list = new ArrayList<String>();
+        list.add(name);
+        return list;
+    }
+
+    public static List<String> convertToList(String[] names) {
+        List<String> list = new ArrayList<String>();
+        list.addAll(Arrays.asList(names));
+        return list;
+    }
+
 }

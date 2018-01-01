@@ -5,9 +5,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface DocService {
-    public void addDocMsg(Doc doc);
+    void save(Doc doc);
 
-    public void delete(int id);
+    void delete(int id);
 
-    public List<Doc> getPageList(Pageable pageable);
+    List<Doc> getPageList(Pageable pageable);
+
+    List<Doc> findByKey(String key);
+
+    Doc getByName(String name);
+
+    int checkExist(String name);
 }

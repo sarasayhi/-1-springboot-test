@@ -16,6 +16,9 @@ public interface DocRepository extends PagingAndSortingRepository<Doc, Integer> 
     @Query(value = "select d from Doc d where d.deleted = 0")
     List<Doc> getDocByPage(Pageable pageable);
 
+    @Query(value = "select d from Doc d where d.deleted = 0 and (d.name like %:key% or d.tags like %:key%)")
+    List<Doc> findByKey(@Param("key") String key);
+
     @Modifying
     @Query("update Doc d set d.deleted = 1 where d.id in :ids")
     void deleteBatch(@Param("ids") List<Integer> ids);
@@ -28,4 +31,7 @@ public interface DocRepository extends PagingAndSortingRepository<Doc, Integer> 
 
     @Query(value = "select count(d) from Doc d where d.deleted = 0 and d.name = :name")
     int checkExist(@Param("name") String name);
+
+    @Query(value = "select count(d) from Doc d where d.deleted = 0")
+    int getTotal();
 }

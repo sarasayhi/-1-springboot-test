@@ -2,7 +2,6 @@ package com.Marissa.FAQ.repository;
 
 import com.Marissa.FAQ.repository.po.Doc;
 import com.Marissa.FAQ.utils.CommonUtils;
-import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,45 +28,53 @@ public class DocRepositoryTest {
 //            add(doc);
 //    }
 
+    private String name = "单元测试用2";
     @Test
     public void add(){
-        Doc doc = new Doc("单元测试用1","无","测试",0,new Date(),new Date(),0,0,"pdf");
+        Doc doc = new Doc(name,"无","测试",0,new Date(),new Date(),0,0,"pdf");
         docRepository.save(doc);
     }
 
     @Test
     public void checkName(){
-        int i = docRepository.checkExist("单元测试用1");
+        int i = docRepository.checkExist(name);
         System.out.println("checkName:" + i);
     }
 
     @Test
     public void getId(){
-        int id = docRepository.getId("单元测试用1");
+        int id = docRepository.getId(name);
         System.out.println("getId: " + id);
     }
 
     @Test
     public void getByName(){
-        Doc doc = docRepository.getByName("单元测试用1");
-        System.out.println("getByName: " + JSON.toJSONString(doc));
+        Doc doc = docRepository.getByName(name);
+        System.out.println("getByName: " + CommonUtils.transformToString(doc));
     }
 
     @Test
     public void getlist(){
         Pageable pageable = new PageRequest(1,1, Sort.Direction.DESC,"id");
         List<Doc> list = docRepository.getDocByPage(pageable);
-        System.out.println("getlist: " + JSON.toJSONString(list));
+        System.out.println("getlist: " + CommonUtils.transformToString(list));
     }
 
     @Test
-    public void delete(){docRepository.deleteBatch(CommonUtils.convertToList(29)); }
+    public void delete(){docRepository.deleteBatch(CommonUtils.convertToList(30)); }
 
     @Test
     public void update(){
-        Doc doc = new Doc("单元测试用1","无11","测试",0,new Date(),new Date(),0,0,"pdf");
-        doc.setId(29);
+        Doc doc = new Doc(name,"无11","测试",0,new Date(),new Date(),0,0,"pdf");
+        doc.setId(30);
         docRepository.save(doc);
+    }
+
+    @Test
+    public void findByKey(){
+        String key = "测试";
+        List<Doc> list = docRepository.findByKey(key);
+        System.out.println("findByKey: " + CommonUtils.transformToString(list));
     }
 
 //    @After
